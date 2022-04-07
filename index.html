@@ -1,1 +1,91 @@
-Hello World
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>superlokal - cottbus</title>
+  <meta name="description" content="Veranstaltungen in Cottbus">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <meta name="theme-color" content="#fafafa">
+
+  <style type="text/css">
+    * {
+      font-family: Helvetica, sans-serif;
+    }
+    header, main, footer {
+      padding: 0 1em 0 1em;
+    }
+    th {
+      text-align: left;
+      font-weight: 100;
+      color: #999;
+    }
+    td {
+      margin: 1em;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>superlokal - cottbus</h1>
+    <hr/>
+  </header>
+  <main>
+    <h2>Filter auswählen</h2>
+    <form id="filterForm" method="GET">
+    </form>
+    <hr/>
+    <ul id="filterList">
+    </ul>
+    <hr/>
+    <table id="events" border="0" cellpadding="10">
+      <thead>
+        <tr><th>datum</th><th>zeit</th><th>lokation</th><th>info</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2022-04-07</td><td>17:00 - 18:00</td><td>COLab</td><td>3D-Druck Workshop für Einsteiger</td>
+        </tr>
+        <tr>
+          <td>2022-04-08</td><td>20:00</td><td>Galerie Fango</td><td>Concerto Fango: Mummys A Tree</td>
+        </tr>
+        <tr>
+          <td>2022-04-14</td><td>20:00</td><td>Galerie Fango</td><td>Jam Session</td>
+        </tr>
+        <tr>
+          <td>2022-04-30</td><td>20:00</td><td>Galerie Fango</td><td>Concerto Fango: Lost But Grounde</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </main>
+  <footer>
+    <hr/>
+    FOOTER
+  </footer>
+
+  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+
+</html>
