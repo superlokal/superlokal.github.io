@@ -1,0 +1,25 @@
+{
+  "name": "superlokal.github.io",
+  "version": "1.0.0",
+  "description": "superlokal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node scrapers/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/superlokal/superlokal.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/superlokal/superlokal.github.io/issues"
+  },
+  "homepage": "https://github.com/superlokal/superlokal.github.io#readme",
+  "devDependencies": {
+    "axios": "^0.26.1",
+    "jsdom": "^19.0.0"
+  }
+}

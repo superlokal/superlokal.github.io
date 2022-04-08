@@ -34,7 +34,7 @@ function createElement (tagName, attributes = {}) {
   const filterForm = document.getElementById('filterForm')
   const filterList = document.getElementById('filterList')
 
-  const addFilter = (params) => {
+  const addFilters = (params) => {
     for (const param of params) {
       const [ name, value ] = param.split('=')
       const hiddenInput = createElement('input', {
@@ -45,6 +45,16 @@ function createElement (tagName, attributes = {}) {
       filterForm.appendChild(hiddenInput)
     }
     filterForm.submit()
+  }
+
+  const createFilterButton = (buttonName, paramName, fn) => {
+    const button = createElement('input', {
+      type: 'button',
+      name: paramName,
+      value: buttonName,
+      click: fn
+    })
+    return button
   }
 
   const allEvents = eventsRows.map((row, index) => {
@@ -58,9 +68,10 @@ function createElement (tagName, attributes = {}) {
     if (!filtered) row.classList.add('hidden');
   })
 
-  // console.log(filteredEvents)
   if (filters.length === 0) {
     filterList.innerHTML = '<li>Keine Filter ausgewählt.</li>'
+  } else {
+    document.getElementById('resetFilters').innerHTML = '<a href="/">Alle Filter zurücksetzen</a>'
   }
   for (const [name, value] of searchParams) {
     const filterItem = createElement('li')
@@ -68,16 +79,28 @@ function createElement (tagName, attributes = {}) {
     filterList.appendChild(filterItem)
   }
 
-  const todayFilterInput = createElement('input', {
-    type: 'button',
-    name: 'datum',
-    value: 'Heute',
-    click: () => {
-      const now = new Date()
-      const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-      addFilter([`datum=${today}`])
-    }
+  const formatDate = (date) => {
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  }
+
+  const todayFilterButton = createFilterButton('Heute', 'datum', () => {
+    addFilters([`datum=${formatDate(new Date())}`])
   })
 
-  filterForm.appendChild(todayFilterInput)
+  const tomorrowFilterButton = createFilterButton('Morgen', 'datum', () => {
+    const now = new Date()
+    const t = new Date(now.setDate(now.getDate() + 1));
+    const tomorrow = formatDate(t)
+    addFilters([`datum=${tomorrow}`])
+  })
+
+  const filterButtons = [
+    todayFilterButton,
+    tomorrowFilterButton
+  ]
+
+  for (const button of filterButtons) {
+    filterForm.appendChild(button)
+  }
+  
 })()

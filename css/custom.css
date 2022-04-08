@@ -1,0 +1,53 @@
+* {
+  font-family: Helvetica, sans-serif;
+}
+
+header, main, footer {
+  padding: 0 1em 0 1em;
+}
+
+footer {
+  margin-top: 3em;
+}
+
+th {
+  text-align: left;
+  font-weight: 100;
+  color: #999;
+}
+
+td {
+  margin: 1em;
+}
+
+.hidden {
+  display: none;
+}
+
+#events {
+  border-collapse: collapse;
+}
+
+#events tr {
+  border-bottom: 1px solid #ccc;
+}
+
+#events tr:hover {
+  background-color: #ccc;
+}
+
+#events td, #events th {
+  padding: 10px;
+}
+
+#events td:first-child {
+  width: 10ch;
+}
+
+#events td:nth-of-type(2) {
+  width: 13ch;
+}
+
+#filterForm input[type=button] {
+  margin-right: 1em;
+}
