@@ -75,7 +75,7 @@ function createElement (tagName, attributes = {}) {
   }
   for (const [name, value] of searchParams) {
     const filterItem = createElement('li')
-    filterItem.innerHTML = `${name} = ${value}`
+    filterItem.innerHTML = `<a href="/?${name}=${value}">${name}=${value}</a>`
     filterList.appendChild(filterItem)
   }
 
@@ -94,9 +94,26 @@ function createElement (tagName, attributes = {}) {
     addFilters([`datum=${tomorrow}`])
   })
 
+  const now = new Date()
+  const currentMonthName = now.toLocaleString('de-de', { month: "long" })
+  const currentYear = now.getFullYear()
+  const currentMonth = String(now.getMonth()+1).padStart(2, '0')
+  const nextMonthDate = new Date(currentYear, now.getMonth()+1, 1)
+  const nextMonth = String(nextMonthDate.getMonth()+1).padStart(2, '0')
+  const nextMonthName = nextMonthDate.toLocaleString('de-de', { month: "long" })
+  
+  const currentMonthFilterButton = createFilterButton(currentMonthName, 'datum', () => {
+    addFilters([`datum=${currentYear}-${currentMonth}`])
+  })
+  const nextMonthFilterButton = createFilterButton(nextMonthName, 'datum', () => {
+    addFilters([`datum=${currentYear}-${nextMonth}`])
+  })
+
   const filterButtons = [
     todayFilterButton,
-    tomorrowFilterButton
+    tomorrowFilterButton,
+    currentMonthFilterButton,
+    nextMonthFilterButton
   ]
 
   for (const button of filterButtons) {
