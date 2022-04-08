@@ -22,9 +22,20 @@ function createElement (tagName, attributes = {}) {
 (function() {
   const filters = [];
   const searchParams = (new URL(document.location)).searchParams;
+  const params = {
+    datum: []
+  }
   for (const [key, value] of searchParams) {
+    if (params[key]) params[key].push(value)
+  }
+  for (const [key, arr] of Object.entries(params)) {
     filters.push((event) => {
-      if (event[key]) return event[key].startsWith(value)
+      if (event[key]) {
+        // multiple filters as AND:
+        return arr.some((value) => {
+          return event[key].startsWith(value)
+        })
+      }
       // default:
       return true
     })
