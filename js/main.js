@@ -23,22 +23,27 @@ function createElement (tagName, attributes = {}) {
   const filters = [];
   const searchParams = (new URL(document.location)).searchParams;
   const params = {
-    datum: []
+    datum: [],
+    zeit: [],
+    lokation: [],
+    info: []
   }
   for (const [key, value] of searchParams) {
     if (params[key]) params[key].push(value)
   }
   for (const [key, arr] of Object.entries(params)) {
-    filters.push((event) => {
-      if (event[key]) {
-        // multiple filters as AND:
-        return arr.some((value) => {
-          return event[key].startsWith(value)
-        })
-      }
-      // default:
-      return true
-    })
+    if (arr.length > 0) {
+      filters.push((event) => {
+        if (event[key]) {
+          // multiple filters as AND:
+          return arr.some((value) => {
+            return event[key].startsWith(value)
+          })
+        }
+        // default:
+        return true
+      })
+    }
   }
   const eventsTable = document.getElementById('events')
   const eventsRows = [...eventsTable.querySelectorAll('tbody tr')]
