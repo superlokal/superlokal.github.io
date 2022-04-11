@@ -7,7 +7,8 @@ const template = fs.readFileSync('./index_template.html').toString();
 
 const scrapers = {
   cottbus_stadt: require('./cottbus_stadt.js'),
-  fango: require('./fango.js')
+  fango: require('./fango.js'),
+  chekov: require('./checkov.js')
 }
 
 async function main () {

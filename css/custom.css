@@ -51,3 +51,7 @@ td {
 #filterForm input[type=button] {
   margin-right: 1em;
 }
+
+#filterLokation {
+  margin-top: 1em;
+}

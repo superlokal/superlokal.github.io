@@ -1,42 +1,42 @@
-function pipe (...cbs) {
-  const items = cbs[0];
-  let result = items;
-  if (items.length > 0) {
-    for (let i = 1, n = cbs.length; i < n; i++) {
-      result = result.filter(cbs[i]);
-    }
-  }
-  return result
-}
-
-function createElement (tagName, attributes = {}) {
-  const el = document.createElement(tagName)
-  for (const [name, value] of Object.entries(attributes)) {
-    const type = typeof value 
-    if (type === 'string') el.setAttribute(name, value);
-    if (type === 'function') el.addEventListener(name, value);
-  }
-  return el
-}
-
 (function() {
+  function pipe (...cbs) {
+    const items = cbs[0];
+    let result = items;
+    if (items.length > 0) {
+      for (let i = 1, n = cbs.length; i < n; i++) {
+        result = result.filter(cbs[i]);
+      }
+    }
+    return result
+  }
+  
+  function createElement (tagName, attributes = {}) {
+    const el = document.createElement(tagName)
+    for (const [name, value] of Object.entries(attributes)) {
+      const type = typeof value 
+      if (type === 'string') el.setAttribute(name, value);
+      if (type === 'function') el.addEventListener(name, value);
+    }
+    return el
+  }
+
   const filters = [];
-  const searchParams = (new URL(document.location)).searchParams;
-  const params = {
-    datum: [],
-    zeit: [],
-    lokation: [],
-    info: []
+  const searchParams = {
+    // Use Map for unique entries:
+    datum: new Map(),
+    zeit: new Map(),
+    lokation: new Map(),
+    info: new Map()
   }
-  for (const [key, value] of searchParams) {
-    if (params[key]) params[key].push(value)
+  for (const [key, value] of (new URL(document.location)).searchParams) {
+    if (searchParams[key]) searchParams[key].set(value, true)
   }
-  for (const [key, arr] of Object.entries(params)) {
-    if (arr.length > 0) {
+  for (const [key, map] of Object.entries(searchParams)) {
+    if (map.size > 0) {
       filters.push((event) => {
         if (event[key]) {
           // multiple filters as AND:
-          return arr.some((value) => {
+          return Array.from(map.keys()).some((value) => {
             return event[key].startsWith(value)
           })
         }
@@ -48,17 +48,28 @@ function createElement (tagName, attributes = {}) {
   const eventsTable = document.getElementById('events')
   const eventsRows = [...eventsTable.querySelectorAll('tbody tr')]
   const filterForm = document.getElementById('filterForm')
+  const filterDatum = document.getElementById('filterDatum')
+  const filterLokation = document.getElementById('filterLokation')
   const filterList = document.getElementById('filterList')
+
+  const addHiddenInput = (name, value) => {
+    const oldElement = filterForm.querySelector(`input[type=hidden][name=${name}]`)
+    const hiddenInput = createElement('input', {
+      type: 'hidden',
+      name,
+      value
+    })
+    if (oldElement) {
+      filterForm.replaceChild(hiddenInput, oldElement)
+    } else {
+      filterForm.appendChild(hiddenInput)
+    }
+  }
 
   const addFilters = (params) => {
     for (const param of params) {
       const [ name, value ] = param.split('=')
-      const hiddenInput = createElement('input', {
-        type: 'hidden',
-        name,
-        value
-      })
-      filterForm.appendChild(hiddenInput)
+      addHiddenInput(name, value)
     }
     filterForm.submit()
   }
@@ -78,23 +89,42 @@ function createElement (tagName, attributes = {}) {
     return { datum, zeit, lokation, info, index }
   })
 
+  let allLocations = new Map()
+
   const filteredEvents = pipe(allEvents, ...filters)
   eventsRows.forEach((row, index) => {
     const filtered = filteredEvents.find((e) => e.index === index);
     if (!filtered) row.classList.add('hidden');
+    const lokation = row.children[2].textContent.trim()
+    const count = allLocations.get(lokation) || 0
+    allLocations.set(lokation, count + 1)
   })
 
+  allLocations = new Map([...allLocations.entries()].sort())
+
   if (filters.length === 0) {
-    filterList.innerHTML = '<li>Keine Filter ausgewählt.</li>'
+    filterList.innerHTML = '<li>Kein Filter ausgewählt.</li>'
   } else {
     document.getElementById('resetFilters').innerHTML = '<a href="/">Alle Filter zurücksetzen</a>'
   }
-  for (const [name, value] of searchParams) {
-    const filterItem = createElement('li')
-    filterItem.innerHTML = `<a href="/?${name}=${value}">${name}=${value}</a>`
-    filterList.appendChild(filterItem)
+  for (const [name, map] of Object.entries(searchParams)) {
+    let keyIndex = 1
+    for (const value of map.keys()) {
+      if (value && value !== '') {
+        const filterItem = createElement('li')
+        filterItem.innerHTML = `<a href="/?${name}=${value}">${name}=${value}</a>`
+        if (name === 'datum') {
+          if (keyIndex === map.size) {
+            addHiddenInput(name, value)
+            filterList.appendChild(filterItem)
+          }
+        } else {
+          filterList.appendChild(filterItem)
+        }
+      }
+      keyIndex = keyIndex + 1
+    }
   }
-
   const formatDate = (date) => {
     return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
   }
@@ -125,15 +155,37 @@ function createElement (tagName, attributes = {}) {
     addFilters([`datum=${currentYear}-${nextMonth}`])
   })
 
-  const filterButtons = [
+  const filterDatumButtons = [
     todayFilterButton,
     tomorrowFilterButton,
     currentMonthFilterButton,
     nextMonthFilterButton
   ]
 
-  for (const button of filterButtons) {
-    filterForm.appendChild(button)
+  for (const button of filterDatumButtons) {
+    filterDatum.appendChild(button)
   }
+
+  const lokationSelect = createElement('select', {
+    name: 'lokation',
+    multiple: true,
+    change: () => filterForm.submit()
+  })
+  const noOption = createElement('option', {
+    value: ''
+  })
+  noOption.innerText = 'Filter für Lokation auswählen'
+  lokationSelect.appendChild(noOption)
+  for (const [lokation, _count] of allLocations) {
+    const selected = Array.from(searchParams['lokation'].keys()).includes(lokation) || false
+    let option = createElement('option', {
+      value: lokation
+    })
+    option.selected = selected;
+    option.innerText = lokation;
+    lokationSelect.appendChild(option);
+  }
+
+  filterLokation.appendChild(lokationSelect)
   
 })()

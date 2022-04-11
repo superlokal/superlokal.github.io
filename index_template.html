@@ -31,7 +31,11 @@
   </header>
   <main>
     <h2>Filter auswählen</h2>
-    <form id="filterForm" method="GET"></form>
+    <form id="filterForm" method="GET">
+      <div id="filterDatum"></div>
+      <div id="filterZeit"></div>
+      <div id="filterLokation"></div>
+    </form>
     <hr/>
     <ul id="filterList"></ul>
     <p id="resetFilters"></p>
@@ -41,11 +45,12 @@
   <footer>
     <p>
       Dies ist ein Aggregator für Veranstaltung in und um Cottbus herum. Die Datenquellen sind aktuell
-      der <a href="https://www.cottbus.de/erleben/veranstaltungen/" target="_blank">Veranstaltungskalender der Stadt Cottbus</a>
+      der <a href="https://www.cottbus.de/erleben/veranstaltungen/" target="_blank">Veranstaltungskalender der Stadt Cottbus</a>,
+      die <a href="https://www.facebook.com/Chekov.Cottbus/" target="_blank">Facebookseite vom Chekov</a>
       und die <a href="https://www.facebook.com/galeriefango/events" target="_blank">Facebookseite der Galerie Fango</a>.
-      Ich habe das programmiert, da ich im Cottbusser Veranstaltungskalender z. B. Vereine wie die Galerie Fango vermisst habe.
-      Leider werden Menschen ohne Facebook-Account o. ä. von den Infos über Veranstaltungen ausgeschlossen,
-      dies soll mit diesem einfachen Veranstaltungskalender geändert werden.
+      Ich habe das programmiert, da ich im Cottbusser Veranstaltungskalender z.B. Vereine wie die Galerie Fango vermisst habe.
+      Leider werden Menschen ohne Facebook-Account o. ä. von den Infos über Veranstaltungen ausgeschlossen.
+      Dies soll mit diesem einfachen Veranstaltungskalender geändert werden.
     </p>
     <p>Wenn ihr Kritik, Hinweise etc. habt, dann schreibt mir einfach: <a href="mailto:krispin@posteo.de" target="_blank">krispin@posteo.de</a>.</p>
   </footer>
