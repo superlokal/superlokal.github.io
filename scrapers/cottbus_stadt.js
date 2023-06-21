@@ -1,7 +1,7 @@
 module.exports = async ({ JSDOM, axios }) => {
   const result = []
-  // fetch next 8 weeks:
-  for (let i=0; i <= 8; i++) {
+  // fetch next 12 weeks:
+  for (let i=0; i <= 12; i++) {
     const response = await axios.get(`https://www.cottbus.de/erleben/veranstaltungen/week.pl?offset=${i}`)
     const { document } = (new JSDOM(response.data)).window
     const page = document.querySelector('#cbf_main')
