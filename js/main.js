@@ -84,10 +84,18 @@
     return button
   }
 
+  // To generate filterButtons:
+  const eventMonths = []
+
   const allEvents = eventsRows.map((row, index) => {
     const [ datum, zeit, lokation, info ] = [...row.children].map((c) => c.innerText )
+    const [year, month] = datum.split('-')
+    const value = `${year}-${month}`
+    if (!eventMonths.includes(value)) eventMonths.push(value)
     return { datum, zeit, lokation, info, index }
   })
+
+  eventMonths.sort()
 
   let allLocations = new Map()
 
@@ -141,26 +149,23 @@
   })
 
   const now = new Date()
-  const currentMonthName = now.toLocaleString('de-de', { month: "long" })
   const currentYear = now.getFullYear()
-  const currentMonth = String(now.getMonth()+1).padStart(2, '0')
-  const nextMonthDate = new Date(currentYear, now.getMonth()+1, 1)
-  const nextMonth = String(nextMonthDate.getMonth()+1).padStart(2, '0')
-  const nextMonthName = nextMonthDate.toLocaleString('de-de', { month: "long" })
-  
-  const currentMonthFilterButton = createFilterButton(currentMonthName, 'datum', () => {
-    addFilters([`datum=${currentYear}-${currentMonth}`])
-  })
-  const nextMonthFilterButton = createFilterButton(nextMonthName, 'datum', () => {
-    addFilters([`datum=${currentYear}-${nextMonth}`])
-  })
 
   const filterDatumButtons = [
     todayFilterButton,
-    tomorrowFilterButton,
-    currentMonthFilterButton,
-    nextMonthFilterButton
+    tomorrowFilterButton
   ]
+
+  for (let i = 0; i < eventMonths.length; i++) {
+    const [year, month] = eventMonths[i].split('-')
+    const date = new Date(year, Number(month)-1, 1)
+    let monthName = date.toLocaleString('de-de', { month: "long" })
+    if (Number(year) !== Number(currentYear)) monthName += ` ${year}`
+    const monthFilterButton = createFilterButton(monthName, 'datum', () => {
+      addFilters([`datum=${year}-${month}`])
+    })
+    filterDatumButtons.push(monthFilterButton)
+  }
 
   for (const button of filterDatumButtons) {
     filterDatum.appendChild(button)
