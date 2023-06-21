@@ -12,3 +12,7 @@ jobs:
           node-version: '14'
       - run: npm install
       - run: npm run build
+      - uses: EndBug/add-and-commit@v9.1.3
+        with:
+          add: ./index.html
+          message: 'workflow: fetch data'
