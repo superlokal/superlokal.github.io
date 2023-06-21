@@ -1,5 +1,8 @@
 name: main
 on:
+  push:
+    branches:    
+      - main
   schedule:
     # Runs every Sunday at 08:05
     - cron:  '5 8 * * 0'
